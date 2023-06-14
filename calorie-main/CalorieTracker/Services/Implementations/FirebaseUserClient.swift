@@ -1,0 +1,28 @@
+//
+//  FirebaseUserClient.swift
+//  CalorieTracker
+//
+//  Created by Drew Sen on 10/06/2023.
+//
+
+import FirebaseFirestore
+import FirebaseFirestoreSwift
+
+final class FirebaseUserClient: UserClient {
+    
+    private let db = Firestore.firestore()
+    
+    func allUsers() async -> [User] {
+        let query = try? await db.collection(Path.users).getDocuments()
+        let users = query?.documents.compactMap { try? $0.data(as: User.self) } ?? []
+        
+        return users
+    }
+    
+}
+
+private struct Path {
+    
+    static let users = "users"
+    
+}
